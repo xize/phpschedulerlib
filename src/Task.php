@@ -29,9 +29,10 @@ namespace phpschedulerlib {
         private $cfg;
         private $func;
         private $ticks;
+        private $isdelayed;
         private $status = false;
 
-        public function __construct(string $id, $anonymousfunc, int $ticks) {
+        public function __construct(string $id, $anonymousfunc, int $ticks, $isdelayed) {
             array_push(SELF::tasks, &$this);
             $this->ID = $id;
             $this->cfg = new \Config();
@@ -51,6 +52,7 @@ namespace phpschedulerlib {
                     `id` int(254) NOT NULL AUTO_INCREMENT,
                     `time` blob NOT NULL,
                     `name` varchar(100) NOT NULL,
+                    `isdelayed` integer(255) NOT NULL,
                     PRIMARY KEY(`id`),
                     UNIQUE `phpschedulerlib` (name),
                     KEY `name` (`name`)
@@ -69,8 +71,8 @@ namespace phpschedulerlib {
                 throw new Exception("Unable to instance this class, duplicate scheduler!: ". $this->ID ."");
             } else {
                 //create new task inside the database
-                $add = $sql->prepare("INSERT INTO phpschedulerlib(time, name) VALUES(?, ?)");
-                $add->bind_param("bs", microtime()*$ticks, $id);
+                $add = $sql->prepare("INSERT INTO phpschedulerlib(time, name, isdelayed) VALUES(?, ?, ?)");
+                $add->bind_param("bsi", microtime()*$ticks, $id, $isdelayed ?  1 : 0);
                 $add->execute();
                 $add->close();
             }
@@ -123,6 +125,20 @@ namespace phpschedulerlib {
                 return true;
             }
             return false;
+        }
+
+        /**
+        * returns true if the task is delayed, otherwise false
+        *
+        * @author xize
+        */
+        public function isDelayed() {
+            $sql = new \mysqli($this->cfg->getNetwork(), $this->cfg->getDBUser(), $this->cfg->getDBPassword(), $this->cfg->getDB());
+            $delayed = $sql->prepare("SELECT isdelayed FROM phpschedulerlib WHERE name=?");
+            $delayed->bind_param("s", $this->ID);
+            $bol = $delayed->execute() == 1 ? true : false;
+            $delayed->close();
+            return $bol;
         }
 
         /**
