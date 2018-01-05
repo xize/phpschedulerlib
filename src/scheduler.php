@@ -107,6 +107,8 @@ namespace phpschedulerlib {
             $sql = new \mysqli($this->cfg->getNetwork(), $this->cfg->getDBUser(), $this->cfg->getDBPassword(), $this->cfg->getDB());
             $update = $sql->prepare("UPDATE phpschedulerlib WHERE name=? SET time=?");
             $update->bind_param("ss", $this->ID, $this->getCurrentTime()*$this->ticks);
+            $update->execute();
+            $update->close();
         }
 
         /**
