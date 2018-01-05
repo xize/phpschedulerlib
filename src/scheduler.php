@@ -23,14 +23,40 @@ namespace phpschedulerlib {
 
         require_once("task.php");
 
-        public function runTasks() {
+        /**
+        * polls through the tasks and run everything what is runable at this time.
+        *
+        * @author xize
+        */
+        public function poll() {
             foreach(Task::getAllTasks() as Task $t) {
                 if($t->isSafeToTick()) {
-                    $t->run();
+                    if($t->isDelayed()) {
+                        $t->runDelayedTask();                      
+                    } else {
+                        $t->runTimerTask();
+                    }
                 }
             }
         }
 
+        /**
+        * generates a 1pixel image disguised as a get post, in order to sync with the browser.
+        *
+        * @author xize
+        */
+        public function createTracker() {
+            echo "<img src=\"?trck=". microtime() . "\" width=\"1px\" height=\"1px\"/>";
+        }
+
     }
 
+    $scheduler = new Scheduler();
+    $scheduler->createTracker();
+    if(isset($_GET['trck'])) {
+         $time = $_GET['trck'];
+         if((microtime() - $time) < 1000) {
+            $this->poll();
+        }
+    }
 }
