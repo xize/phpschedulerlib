@@ -155,7 +155,7 @@ namespace phpschedulerlib {
         * @param delay - the interval between each tick.
         * @author xize
         */
-        public function runTimerTask(int $delay) {
+        public function runTimerTask() {
                 if($this->isRunning()) {
                     $this->func();
                 } else {
@@ -169,7 +169,7 @@ namespace phpschedulerlib {
         * @param delay - the interval between each tick.
         * @author xize
         */
-        public function runDelayedTask(int $delay) {
+        public function runDelayedTask() {
             if($this->isRunning()) {
                 $this->func();
             }
