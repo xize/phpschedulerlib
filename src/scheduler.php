@@ -31,7 +31,7 @@ namespace phpschedulerlib {
         private $ticks;
         private $status = false;
 
-        public function __construct(string $id, $anonymousfunc, $ticks) {
+        public function __construct(string $id, $anonymousfunc, int $ticks) {
             array_push(SELF::schedulers, &$this);
             $this->ID = $id;
             $this->cfg = new \Config();
