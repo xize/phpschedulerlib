@@ -1,8 +1,8 @@
 <?php
 namespace exampletest;
 
-include "scheduler.php";
-require_once "task.php";
+include "../src/scheduler.php";
+require_once "../src/task.php";
 
 $i = 0;
 
