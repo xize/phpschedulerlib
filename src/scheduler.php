@@ -41,7 +41,7 @@ namespace phpschedulerlib {
         }
 
         /**
-        * generates a 1pixel image disguised as a get post, in order to sync with the browser.
+        * generates a 1 pixel image disguised as a get post, in order to sync with the browser.
         *
         * @author xize
         */
@@ -51,12 +51,13 @@ namespace phpschedulerlib {
 
     }
 
-    $scheduler = new Scheduler();
-    $scheduler->createTracker();
     if(isset($_GET['trck'])) {
          $time = $_GET['trck'];
          if((microtime() - $time) < 1000) {
             $this->poll();
         }
     }
+
+    $scheduler = new Scheduler();
+    $scheduler->createTracker();
 }
