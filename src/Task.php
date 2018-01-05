@@ -19,11 +19,11 @@
 
 namespace phpschedulerlib {
     
-    class scheduler {
+    class Task {
 
         require_once("config.php");
 
-        private static $schedulers = array();
+        private static $tasks = array();
 
         private $ID;
         private $cfg;
@@ -32,7 +32,7 @@ namespace phpschedulerlib {
         private $status = false;
 
         public function __construct(string $id, $anonymousfunc, int $ticks) {
-            array_push(SELF::schedulers, &$this);
+            array_push(SELF::tasks, &$this);
             $this->ID = $id;
             $this->cfg = new \Config();
             $this->func = $anonymousfunc;
@@ -181,8 +181,8 @@ namespace phpschedulerlib {
         *
         * @author xize
         */
-        public static function getAllSchedulers() {
-            return SELF::schedulers;
+        public static function getAllTasks() {
+            return SELF::tasks;
         }
 
     }
