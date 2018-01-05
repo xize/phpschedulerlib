@@ -24,10 +24,10 @@ namespace phpschedulerlib {
         # EDIT THE DATABASE SETTINGS HERE #
         ###################################
         
-        DEFINE("NETWORK", "localhost");
-        DEFINE("DBUSER", "root");
-        DEFINE("DBPASS", "");
-        DEFINE("DB", "");
+        private $network = "localhost";
+        private $dbuser = "root";
+        private $dbpass = "empty";
+        private $db = "empty";
 
         ####################################################
         # END OF CONFIGURATION DO NOT EDIT BELOW THIS LINE #
@@ -39,7 +39,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public function getNetwork() {
-            return NETWORK;
+            return $this->network;
         }
 
         /**
@@ -48,7 +48,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public function getDBUser() {
-            return DBUSER;
+            return $this->dbuser;
         }
 
         /**
@@ -57,7 +57,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public function getDBPassword() {
-            return DBPASS;
+            return $this->dbpass;
         }
 
         /**
@@ -66,7 +66,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public function getDB() {
-            return DB;
+            return $this->db;
         }
 
     }

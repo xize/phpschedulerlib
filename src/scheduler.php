@@ -21,7 +21,7 @@ namespace phpschedulerlib {
 
     class Scheduler {
 
-        require_once("task.php");
+        #require_once("task.php");
 
         /**
         * polls through the tasks and run everything what is runable at this time.
@@ -29,7 +29,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public function poll() {
-            foreach(Task::getAllTasks() as Task $t) {
+            foreach(Task::getAllTasks() as $t) {
                 if($t->isSafeToTick()) {
                     if($t->isDelayed()) {
                         $t->runDelayedTask();                      

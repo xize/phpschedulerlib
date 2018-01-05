@@ -19,9 +19,9 @@
 
 namespace phpschedulerlib {
     
-    class Task {
+    require_once("config.php");
 
-        require_once("config.php");
+    class Task {
 
         private static $tasks = array();
 
@@ -33,13 +33,12 @@ namespace phpschedulerlib {
         private $status = false;
 
         public function __construct(string $id, $anonymousfunc, int $ticks, $isdelayed) {
-            array_push(SELF::tasks, &$this);
             $this->ID = $id;
-            $this->cfg = new \Config();
+            $this->cfg = new Config();
             $this->func = $anonymousfunc;
             $this->ticks = $ticks;
 
-            $sql = new mysqli($cfg->getNetwork(), $cfg->getDBUser(), $cfg->getDBPassword(), $cfg->getDB());
+            $sql = new \mysqli($this->cfg->getNetwork(), $this->cfg->getDBUser(), $this->cfg->getDBPassword(), $this->cfg->getDB());
 
             //check first if the table phpschedulerlib exists, else we will create a new table.
             $exists = $sql->prepare("SELECT 1 FROM phpschedulerlib");
@@ -76,6 +75,11 @@ namespace phpschedulerlib {
                 $add->execute();
                 $add->close();
             }
+            $this->addToList();
+        }
+
+        private function addToList() {
+            array_push(SELF::tasks, $this);
         }
 
         /**
