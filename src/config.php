@@ -26,8 +26,8 @@ namespace phpschedulerlib {
         
         private $network = "localhost";
         private $dbuser = "root";
-        private $dbpass = "empty";
-        private $db = "empty";
+        private $dbpass = "";
+        private $db = "scheduler";
 
         ####################################################
         # END OF CONFIGURATION DO NOT EDIT BELOW THIS LINE #
