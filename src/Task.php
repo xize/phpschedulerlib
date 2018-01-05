@@ -42,9 +42,15 @@ namespace phpschedulerlib {
 
             //check first if the table phpschedulerlib exists, else we will create a new table.
             $exists = $sql->prepare("SELECT 1 FROM phpschedulerlib");
-            $existsb = $exists->execute();
+            $existsb = null;
+            try {
+                $existsb = $exists->execute();
+            } catch(Exception $a) {
+                echo "I'm catched ^^";
+            }
+            echo $existsb;
             $exists->close();
-
+            /*
             if(!$existsb) {
                 $create = $sql->prepare("
                 CREATE TABLE IF NOT EXISTS `phpschedulerlib` (
@@ -59,7 +65,7 @@ namespace phpschedulerlib {
                 $create->execute();
                 $create->close();
             }
-
+*/
             //first check if there is a task already running with this name.
             $check = $sql->prepare("SELECT name FROM phpschedulerlib WHERE name=?");
             $check->bind_param("s", $id);
@@ -115,6 +121,20 @@ namespace phpschedulerlib {
             $update->bind_param("ss", $this->ID, $this->getCurrentTime()*$this->ticks);
             $update->execute();
             $update->close();
+        }
+
+        /**
+        * activates the runnable
+        *
+        * @author xize
+        */
+        public function doTick() {
+            if($this->isDelayed()) {
+                $this->runDelayedTask();                      
+            } else {
+                $this->runTimerTask();
+            }
+            updateClock();
         }
 
         /**

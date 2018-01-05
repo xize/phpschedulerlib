@@ -31,11 +31,7 @@ namespace phpschedulerlib {
         public function poll() {
             foreach(Task::getAllTasks() as $t) {
                 if($t->isSafeToTick()) {
-                    if($t->isDelayed()) {
-                        $t->runDelayedTask();                      
-                    } else {
-                        $t->runTimerTask();
-                    }
+                    $t->doTick();
                 }
             }
         }
