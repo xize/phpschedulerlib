@@ -56,7 +56,7 @@ namespace phpschedulerlib {
         *
         * @author xize
         */
-        public function getPassword() {
+        public function getDBPassword() {
             return DBPASS;
         }
 
