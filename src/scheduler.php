@@ -49,7 +49,7 @@ namespace phpschedulerlib {
 
     if(isset($_GET['trck'])) {
          $time = $_GET['trck'];
-         if((microtime() - $time) < 1000) {
+         if((microtime() - $time) < 1000) { //force this condition when the site is slower, else we skip tasks.
             $this->poll();
         }
     }
