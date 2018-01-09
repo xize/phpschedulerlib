@@ -40,22 +40,23 @@ namespace phpschedulerlib {
 
             $sql = new \mysqli($this->cfg->getNetwork(), $this->cfg->getDBUser(), $this->cfg->getDBPassword(), $this->cfg->getDB());
 
-            //check first if the table phpschedulerlib exists, else we will create a new table.
-            $exists = $sql->prepare("SELECT 1 FROM phpschedulerlib");
-            $existsb = null;
-            try {
-                $existsb = $exists->execute();
-            } catch(Exception $a) {
-                echo "I'm catched ^^";
+            $bol = false;
+
+            $stmt = $sql->prepare("SELECT name FROM phpschedulerlib");
+
+            if($stmt) {
+                $bol = true;
+            } else {
+                $bol = false;
             }
-            echo $existsb;
-            $exists->close();
-            /*
-            if(!$existsb) {
+
+            $stmt->close();
+
+            if(!$bol) {
                 $create = $sql->prepare("
                 CREATE TABLE IF NOT EXISTS `phpschedulerlib` (
                     `id` int(254) NOT NULL AUTO_INCREMENT,
-                    `time` blob NOT NULL,
+                    `time` varchar(255) NOT NULL,
                     `name` varchar(100) NOT NULL,
                     `isdelayed` integer(255) NOT NULL,
                     PRIMARY KEY(`id`),
@@ -63,29 +64,38 @@ namespace phpschedulerlib {
                     KEY `name` (`name`)
                 )");
                 $create->execute();
+                $create->error;
                 $create->close();
             }
-*/
+
             //first check if there is a task already running with this name.
             $check = $sql->prepare("SELECT name FROM phpschedulerlib WHERE name=?");
-            $check->bind_param("s", $id);
-            $bol = $check->execute();
+            $check->bind_param("s", $this->ID);
+            $taskexists = $check->execute();
             $check->close();
-            if($bol) {
+            if($taskexists == null) {
                 //throw exception.
-                throw new Exception("Unable to instance this class, duplicate scheduler!: ". $this->ID ."");
+                throw new \Exception("Unable to instance this class, duplicate scheduler!: ". $this->ID ."");
+                return;
             } else {
                 //create new task inside the database
                 $add = $sql->prepare("INSERT INTO phpschedulerlib(time, name, isdelayed) VALUES(?, ?, ?)");
-                $add->bind_param("bsi", microtime()*$ticks, $id, $isdelayed ?  1 : 0);
+                $time = microtime()."";
+                $delayed = ($this->isdelayed ? 1 : 0);
+                $add->bind_param("ssi", $time, $id, $delayed);
                 $add->execute();
                 $add->close();
             }
             $this->addToList();
         }
 
+        /**
+        * adds the current task into the list.
+        *
+        * @author xize
+        */
         private function addToList() {
-            array_push(SELF::tasks, $this);
+            array_push(SELF::$tasks, $this);
         }
 
         /**
@@ -222,7 +232,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public static function getAllTasks() {
-            return SELF::tasks;
+            return SELF::$tasks;
         }
 
     }
