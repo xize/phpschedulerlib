@@ -19,11 +19,12 @@
 
 namespace phpschedulerlib {
     
+
+    session_start();
+
     require_once("config.php");
 
     class Task {
-
-        private static $tasks = array();
 
         private $ID;
         private $cfg;
@@ -90,12 +91,24 @@ namespace phpschedulerlib {
         }
 
         /**
+        * returns the name of this task.
+        *
+        * @author xize
+        */
+        public function getName() {
+            return $this->ID;
+        }
+
+        /**
         * adds the current task into the list.
         *
         * @author xize
         */
         private function addToList() {
-            array_push(SELF::$tasks, $this);
+            if(!isset($_SESSION['scheduler'])) {
+                $_SESSION['scheduler'] = array();
+            }
+            array_push($_SESSION['scheduler'], $this);
         }
 
         /**
@@ -232,7 +245,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public static function getAllTasks() {
-            return SELF::$tasks;
+            return !isset($_SESSION['scheduler']) ? array() : $_SESSION['scheduler'];
         }
 
     }

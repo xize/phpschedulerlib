@@ -19,9 +19,10 @@
 
 namespace phpschedulerlib {
 
-    class Scheduler {
+    require_once("task.php");
 
-        #require_once("task.php");
+    class Scheduler {
+        
 
         /**
         * polls through the tasks and run everything what is runable at this time.
@@ -29,10 +30,17 @@ namespace phpschedulerlib {
         * @author xize
         */
         public function poll() {
+
+            echo "<p>all tasks:<p>";
+
             foreach(Task::getAllTasks() as $t) {
+                echo "<p>".$t->getName()."</p>";
                 if($t->isSafeToTick()) {
                     $t->doTick();
                 }
+                 else {
+                    echo "I'm not ticked! :(";
+                 }
             }
         }
 
@@ -47,13 +55,15 @@ namespace phpschedulerlib {
 
     }
 
-    if(isset($_GET['trck'])) {
-         $time = $_GET['trck'];
-         if((microtime() - $time) < 1000) { //force this condition when the site is slower, else we skip tasks.
-            $this->poll();
-        }
-    }
-
     $scheduler = new Scheduler();
     $scheduler->createTracker();
+
+    if(isset($_GET['trck'])) {
+         //create header to mimic a image.
+         #header("Content-Type: image/jpeg");
+         $time = floatval($_GET['trck']);
+         if((floatval(microtime()) - $time) < 1000) { //force this condition when the site is slower, else we skip tasks.
+            $scheduler->poll();
+        }
+    }
 }
