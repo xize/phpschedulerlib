@@ -23,6 +23,7 @@ namespace phpschedulerlib {
     session_start();
 
     require_once("config.php");
+    require_once("closureserializer.php");
 
     class Task {
 
@@ -36,7 +37,7 @@ namespace phpschedulerlib {
         public function __construct(string $id, $anonymousfunc, int $ticks, $isdelayed) {
             $this->ID = $id;
             $this->cfg = new Config();
-            $this->func = $anonymousfunc;
+            $this->func = new SerializedClosure($anonymousfunc);
             $this->ticks = $ticks;
 
             $sql = new \mysqli($this->cfg->getNetwork(), $this->cfg->getDBUser(), $this->cfg->getDBPassword(), $this->cfg->getDB());
@@ -106,9 +107,13 @@ namespace phpschedulerlib {
         */
         private function addToList() {
             if(!isset($_SESSION['scheduler'])) {
-                $_SESSION['scheduler'] = array();
+                $_SESSION['scheduler'] = serialize(array());
             }
-            array_push($_SESSION['scheduler'], $this);
+
+            $ar = unserialize($_SESSION['scheduler']);
+            $ar[] = $this;
+
+            $_SESSION['scheduler'] = serialize($ar);
         }
 
         /**
@@ -220,7 +225,7 @@ namespace phpschedulerlib {
         */
         public function runTimerTask() {
                 if($this->isRunning()) {
-                    $this->func();
+                    $this->func->getClosure();
                 } else {
                     $this->stop();
                 }
@@ -234,7 +239,7 @@ namespace phpschedulerlib {
         */
         public function runDelayedTask() {
             if($this->isRunning()) {
-                $this->func();
+                $this->func->getClosure();
             }
             $this->stop();
         }
@@ -245,7 +250,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public static function getAllTasks() {
-            return !isset($_SESSION['scheduler']) ? array() : $_SESSION['scheduler'];
+            return !isset($_SESSION['scheduler']) ? array() : unserialize($_SESSION['scheduler']);
         }
 
     }

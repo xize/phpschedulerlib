@@ -1,8 +1,9 @@
 <?php
 namespace exampletest;
 
-include "../src/scheduler.php";
-require_once "../src/task.php";
+include "../scheduler.php";
+require_once "../task.php";
+require_once "../serializedclosure.php";
 
 $i = 0;
 
