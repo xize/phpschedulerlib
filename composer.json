@@ -1,7 +1,7 @@
 {
     "name": "phpschedulerlib",
-    "project-root": "src"
-    "vendor": "0.1.0.0"
+    "project-root": "src",
+    "vendor": "0.1.0.0",
     /* this code is probably not needed considering the fact we defined our project root as src folder.
        so I suspect that the expected behviour should result in extracting the src folder inside the folder with the dependency name.
 
@@ -13,7 +13,6 @@
     */
 
     //TODO: check if the dependency get correctly installed by the composer.
-
     "description": "a scheduler for php without cronjobs",
     "require": {
         "php": ">= 5.3.0"
