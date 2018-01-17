@@ -3,7 +3,7 @@
     "project-root": "src",
     "vendor": "0.1.0.0",
     /* this code is probably not needed considering the fact we defined our project root as src folder.
-       so I suspect that the expected behviour should result in extracting the src folder inside the folder with the dependency name.
+       so I suspect that the expected behviour should result in extracting the src folder inside the folder with the dependency name as resolution.
 
     "autoload": {
         "phpschedulerlib": {
