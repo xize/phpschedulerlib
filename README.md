@@ -10,3 +10,5 @@ we decided to make this library for those who are unable to use cronjobs on thei
 
 ### .3 License
 Our library is licensed under the GPLv3 license, the license is AS IS without any warrenty implied please see: https://github.com/xize/phpschedulerlib/blob/master/LICENSE.
+
+We recommend to copy our license and keep our headers and commit data active for our contributors.
