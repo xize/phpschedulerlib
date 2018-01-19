@@ -107,13 +107,13 @@ namespace phpschedulerlib {
         */
         private function addToList() {
             if(!isset($_SESSION['scheduler'])) {
-                $_SESSION['scheduler'] = serialize(array());
+                $_SESSION['scheduler'] = array();
             }
 
-            $ar = unserialize($_SESSION['scheduler']);
+            $ar = $_SESSION['scheduler'];
             $ar[] = $this;
 
-            $_SESSION['scheduler'] = serialize($ar);
+            $_SESSION['scheduler'] = $ar;
         }
 
         /**
@@ -250,7 +250,7 @@ namespace phpschedulerlib {
         * @author xize
         */
         public static function getAllTasks() {
-            return !isset($_SESSION['scheduler']) ? array() : unserialize($_SESSION['scheduler']);
+            return !isset($_SESSION['scheduler']) ? array() : $_SESSION['scheduler'];
         }
 
     }
